@@ -5,29 +5,19 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
   };
 
-  outputs = { self , nixpkgs ,... }: let
+  outputs = { self , nixpkgs ,... }@inputs: 
+  let
     system = "x86_64-linux";
-  in {
-    devShells."${system}".default = let
-      pkgs = import nixpkgs {
-        inherit system;
-      };
-    in pkgs.mkShell {
-      packages = [
-        pkgs.libGL
-		pkgs.glfw
-
-        # X11 dependencies
-        pkgs.xorg.libX11
-        pkgs.xorg.libX11.dev
-        pkgs.xorg.libXcursor
-        pkgs.xorg.libXi
-        pkgs.xorg.libXinerama
-        pkgs.xorg.libXrandr
-
-        # Web Support
-        pkgs.emscripten
-      ];
-    };
+	pkgs = nixpkgs.legacyPackages.${system};
+	rl = pkgs.callPackage ./raylib/raylib.nix {};
+  in 
+  {
+	devShells.${system}.default = pkgs.mkShell {
+		name = "Graphics";
+		buildInputs = [
+		rl
+		pkgs.raygui
+		];
+	};
   };
 }
