@@ -1,10 +1,11 @@
 CC = zig cc
 LDFLAGS = -lraylib 
+SRC = ./src
 
 all:run
 
 build:
-	$(CC) src/main.c $(LDFLAGS) 
+	$(CC) $(SRC)/main.c $(LDFLAGS) 
 
 run:build
 	./a.out
